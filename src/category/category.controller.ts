@@ -9,6 +9,7 @@ export class CategoryController {
 
   @Get('')
   getAll() {
+    // call getAll service
     return this.userService.getAll();
   }
 }

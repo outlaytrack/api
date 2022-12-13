@@ -8,12 +8,14 @@ export class AuthController {
 
   @Post('signup')
   signup(@Body() dto: AuthDto): any {
+    // call signup service
     return this.authService.signup(dto);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')
   signin(@Body() dto: AuthDto) {
+    // call signin service
     return this.authService.signin(dto);
   }
 }

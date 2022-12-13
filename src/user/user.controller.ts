@@ -11,11 +11,13 @@ export class UserController {
   constructor(private userService: UserService) {}
   @Get('me')
   getMe(@GetUser() user: User) {
+    // return user according to request user
     return user;
   }
 
   @Put('update')
   update(@GetUser('id') userId: number, @Body() userUpdateDto: EditUserDto) {
+    // call update user service
     return this.userService.update(userId, userUpdateDto);
   }
 }

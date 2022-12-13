@@ -6,6 +6,7 @@ export class UserService {
   constructor(private prismaService: PrismaService) {}
 
   async update(userId: number, userUpdateDto) {
+    // update user according to user id
     const user = await this.prismaService.user.update({
       where: {
         id: userId,
@@ -15,6 +16,7 @@ export class UserService {
       },
     });
 
+    // remove hash from user model
     delete user.hash;
     return user;
   }
