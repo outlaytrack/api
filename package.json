@@ -10,7 +10,7 @@
     "prisma:dev:seed": "prisma db seed",
     "db:dev:rm": "sudo docker compose rm dev-db -s -f -v",
     "db:dev:up": "sudo docker compose up dev-db -d",
-    "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && sleep 3 && npm run prisma:dev:deploy && npm run prisma:dev:seed",
+    "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && sleep 3 && npm run prisma:dev:deploy && sleep 3 && npm run prisma:dev:seed",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
