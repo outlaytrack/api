@@ -1,10 +1,9 @@
-import { AuthDto } from './dto/auth.dto';
-import { ForbiddenException, Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import * as argon from 'argon2';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-import { JwtService } from '@nestjs/jwt';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import * as argon from 'argon2';
+import { PrismaService } from '../prisma/prisma.service';
+import { AuthDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -14,33 +13,39 @@ export class AuthService {
     // generate the password hash
     const hash = await argon.hash(dto.password);
 
-    try {
-      // save the new user to the db
-      const user = await this.prismaService.user.create({
-        data: {
-          email: dto.email,
-          hash,
-        },
-      });
+    const isExist = this.prismaService.user.findFirst({
+      where: {
+        email: dto.email,
+        isDeleted: false,
+      },
+    });
+    if (isExist) {
+      // return error if user exist with email
+      throw new BadRequestException('Email already exists');
+    } else {
+      try {
+        // save the new user to the db
+        const user = await this.prismaService.user.create({
+          data: {
+            email: dto.email,
+            hash,
+          },
+        });
 
-      // send back the user token
-      return this.signToken(user.id, user.email);
-    } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === 'P2002') {
-          // return error if user exist with email
-          throw new ForbiddenException('Credentials taken');
-        }
+        // send back the user token
+        return this.signToken(user.id, user.email);
+      } catch (error) {
+        throw new BadRequestException('Something went wrong!');
       }
-      throw error;
     }
   }
 
   async signin(dto: AuthDto) {
-    // find the user by email
-    const user = await this.prismaService.user.findUnique({
+    // find the not deleted user by email
+    const user = await this.prismaService.user.findFirst({
       where: {
         email: dto.email,
+        isDeleted: false,
       },
     });
 
