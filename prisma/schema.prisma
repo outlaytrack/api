@@ -11,57 +11,57 @@ datasource db {
 }
 
 model User {
-    id Int @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    email String @unique
-    hash String
+  email String @unique
+  hash  String
 
-    firstName String?
-    lastName String?
-    isDeleted Boolean @default(false)
+  firstName String?
+  lastName  String?
+  isDeleted Boolean @default(false)
 
-    outlays Outlay[]
+  outlays Outlay[]
 
-    @@map("users")
+  @@map("users")
 }
 
 model Category {
-    id Int @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    name String @unique
-    description String?
-    isDeleted Boolean @default(false)
+  name        String  @unique
+  description String?
+  isDeleted   Boolean @default(false)
 
-    outlays CategoriesOnOutlays[]
+  outlays CategoriesOnOutlays[]
 
-    @@map("categories")
+  @@map("categories")
 }
 
 model Outlay {
-    id Int @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    name String @unique
-    description String?
-    photo String?
-    isDeleted Boolean @default(false)
+  name        String  @unique
+  description String?
+  photo       String?
+  isDeleted   Boolean @default(false)
 
-    user User @relation(fields: [userId], references: [id])
-    userId Int
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
 
-    categories CategoriesOnOutlays[]
+  categories CategoriesOnOutlays[]
 
-    @@map("outlays")
+  @@map("outlays")
 }
 
 model CategoriesOnOutlays {
-  outlay     Outlay    @relation(fields: [outlayId], references: [id])
-  outlayId     Int
+  outlay     Outlay   @relation(fields: [outlayId], references: [id])
+  outlayId   Int
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
 
