@@ -13,12 +13,13 @@ export class AuthService {
     // generate the password hash
     const hash = await argon.hash(dto.password);
 
-    const isExist = this.prismaService.user.findFirst({
+    const isExist = await this.prismaService.user.findFirst({
       where: {
         email: dto.email,
         isDeleted: false,
       },
     });
+
     if (isExist) {
       // return error if user exist with email
       throw new BadRequestException('Email already exists');
